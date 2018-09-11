@@ -1,0 +1,193 @@
+{
+ "EDITOR_STATE": {
+  "allProjectFiles": {
+   "70ed6e91-e74b-4baf-8491-9ec21cffa565": {
+    "id": "70ed6e91-e74b-4baf-8491-9ec21cffa565",
+    "parent": null,
+    "name": "IssueValidation",
+    "type": "DIRECTORY",
+    "isDirectory": true,
+    "children": [
+     "22fc1117-680d-4dd2-8a61-d03320b8b2b4",
+     "8f5a0add-9f79-420f-bbd8-b5b7b66e654f",
+     "0f0f5fef-4631-44a8-a9d9-ac4ee93158fd"
+    ],
+    "isRemovable": false,
+    "filePath": "IssueValidation"
+   },
+   "22fc1117-680d-4dd2-8a61-d03320b8b2b4": {
+    "id": "22fc1117-680d-4dd2-8a61-d03320b8b2b4",
+    "parent": "70ed6e91-e74b-4baf-8491-9ec21cffa565",
+    "name": "lambda.js",
+    "type": "LAMBDA_FILE",
+    "isDirectory": false,
+    "children": [],
+    "isRemovable": true,
+    "filePath": "IssueValidation/lambda.js",
+    "code": "let AWS = require('aws-sdk');\nlet SL_GCP = require('slappforge-sdk-gcp');\nlet sqlConnMgr = require('./SqlConnMgr');\nconst sql = new SL_GCP.SQL(sqlConnMgr);\nlet SL_AWS = require('slappforge-sdk-aws');\nlet connectionManager = require('./ConnectionManager');\nconst rds = new SL_AWS.RDS(connectionManager);\nconsole.log(\"Test\")\n\nexports.handler = function (event, context, callback) {\n\n    // You can pass the existing connection to this function.\n    // A new connection will be created if it's not present as the third param.\n    // You must always end/destroy the DB connection after it's used.\n    sql.query({\n        instanceIdentifier: 'gcptestandun1',\n        query: 'CREATE TABLE Persons (PersonID int, LastName varchar(255), FirstName varchar(255), Address varchar(255), City varchar(255)  );',\n        inserts: []\n    }, function (error, results, connection) {\n        if (error) {\n            throw error;\n        } else {\n            // use `results` to do your magic\n            console.log(results);\n        }\n        connection.end();\n    });\n\n\n\n    callback(null, 'Successfully executed');\n}",
+    "triggers": [
+     {
+      "resourceName": "apigusEast1TestAPIvalidateIssuepost",
+      "config": {}
+     }
+    ],
+    "config": {
+     "memory": 128,
+     "timeout": 60,
+     "runtime": "nodejs8.10"
+    },
+    "testCases": {
+     "45c607da-ea7e-45a6-9589-205a65acd086": {
+      "id": "45c607da-ea7e-45a6-9589-205a65acd086",
+      "name": "Unnamed event",
+      "functionId": "22fc1117-680d-4dd2-8a61-d03320b8b2b4",
+      "event": "{\n    \"key1\": \"value1\",\n    \"key2\": \"value2\",\n    \"key3\": \"value3\"\n}"
+     }
+    }
+   },
+   "8f5a0add-9f79-420f-bbd8-b5b7b66e654f": {
+    "id": "8f5a0add-9f79-420f-bbd8-b5b7b66e654f",
+    "parent": "70ed6e91-e74b-4baf-8491-9ec21cffa565",
+    "name": "ConnectionManager.js",
+    "type": "JS_FILE",
+    "isDirectory": false,
+    "children": [],
+    "isRemovable": true,
+    "filePath": "IssueValidation/ConnectionManager.js",
+    "code": "module.exports = function() {\n    this.dbConnections = [];\n\n    this.dbConnections[\"root\"] = {\n        host: process.env.EndPoint_rdsRoot,\n        port: process.env.Port_rdsRoot,\n        user: process.env.User_rdsRoot,\n        password: process.env.Password_rdsRoot,\n        database: \"test\"\n    };\n};",
+    "triggers": []
+   },
+   "0f0f5fef-4631-44a8-a9d9-ac4ee93158fd": {
+    "id": "0f0f5fef-4631-44a8-a9d9-ac4ee93158fd",
+    "parent": "70ed6e91-e74b-4baf-8491-9ec21cffa565",
+    "name": "SqlConnMgr.js",
+    "type": "JS_FILE",
+    "isDirectory": false,
+    "children": [],
+    "isRemovable": true,
+    "filePath": "IssueValidation/SqlConnMgr.js",
+    "code": "module.exports = function() {\n    this.dbConnections = [];\n\n    this.dbConnections[\"gcptestandun1\"] = {\n        host: \"35.190.163.122\",\n        port: \"3306\",\n        user: \"root\",\n        password: process.env.Password_sqlgcptestandun1,\n        database: \"information_schema\"\n    };\n};",
+    "triggers": []
+   }
+  },
+  "rootNode": "70ed6e91-e74b-4baf-8491-9ec21cffa565",
+  "openFiles": [
+   "22fc1117-680d-4dd2-8a61-d03320b8b2b4"
+  ],
+  "currentFileId": "22fc1117-680d-4dd2-8a61-d03320b8b2b4",
+  "resources": {
+   "sqlgcptestandun1": {
+    "name": "sqlgcptestandun1",
+    "type": "SQL",
+    "config": {
+     "mode": 1,
+     "instance": {
+      "name": "gcptestandun1",
+      "host": "35.190.163.122",
+      "port": 3306,
+      "user": "root",
+      "password": "12345678",
+      "database": "information_schema"
+     }
+    },
+    "globallyEditable": false
+   },
+   "apigusEast1TestAPIvalidateIssuepost": {
+    "name": "apigusEast1TestAPIvalidateIssuepost",
+    "type": "API_GATEWAY",
+    "config": {
+     "selectedRegion": "us-east-1",
+     "apiMode": 1,
+     "apiName": "TestAPI",
+     "apiId": "0itznun7w3",
+     "endpointType": "EDGE",
+     "rootResourceId": "h2lelj6j7k",
+     "existingResources": {
+      "/project": "8mbcv6",
+      "/MyLambda": "98nqbj",
+      "/validateIssue": "bwuz4h",
+      "/yo": "byjo3m",
+      "/": "h2lelj6j7k",
+      "/socks": "vl5n4m"
+     },
+     "resourceMode": 1,
+     "resourcePath": "/validateIssue",
+     "resourceName": "validateIssue",
+     "resourceId": "bwuz4h",
+     "restMethod": "POST",
+     "proxyIntegration": false,
+     "enableCORS": false,
+     "stageMode": 0,
+     "stageName": "Test2"
+    },
+    "globallyEditable": true
+   }
+  },
+  "envVariables": [
+   {
+    "lambdaId": "all",
+    "varKey": "SIGMA_AWS_ACC_ID",
+    "varValue": null,
+    "shouldPersist": false,
+    "editable": false,
+    "displayOnly": false
+   },
+   {
+    "lambdaId": "all",
+    "varKey": "GCLOUD_SERVICE_TOKEN",
+    "varValue": null,
+    "shouldPersist": false,
+    "editable": true
+   },
+   {
+    "lambdaId": "all",
+    "varKey": "GCLOUD_PROJECT_ID",
+    "varValue": null,
+    "shouldPersist": false,
+    "editable": true
+   },
+   {
+    "lambdaId": "22fc1117-680d-4dd2-8a61-d03320b8b2b4",
+    "varKey": "Password_sqlgcptestandun1",
+    "varValue": null,
+    "shouldPersist": false,
+    "editable": true
+   }
+  ],
+  "packageJSON": {
+   "dependencies": {
+    "aws-sdk": {
+     "name": "aws-sdk",
+     "version": "2.176.0",
+     "notRemovable": true
+    },
+    "slappforge-sdk-aws": {
+     "name": "slappforge-sdk-aws",
+     "version": "0.0.5",
+     "notRemovable": false
+    },
+    "slappforge-sdk-gcp": {
+     "name": "slappforge-sdk-gcp",
+     "version": "0.0.1",
+     "notRemovable": false
+    }
+   }
+  },
+  "lambdaId": "22fc1117-680d-4dd2-8a61-d03320b8b2b4",
+  "additionalFiles": []
+ },
+ "PROJECT_META": {
+  "projectName": "IssueValidation",
+  "projectDescription": "",
+  "projectVersion": "1.0.0",
+  "projectRegion": "us-east-1",
+  "lastSave": 1536656054401
+ },
+ "VCS_STATE": {
+  "provider": "GITHUB",
+  "repo": {
+   "name": "IssueValidation",
+   "url": "https://github.com/sigmaidetest/IssueValidation"
+  }
+ }
+}
